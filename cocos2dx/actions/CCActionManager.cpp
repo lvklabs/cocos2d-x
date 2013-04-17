@@ -253,6 +253,7 @@ void CCActionManager::removeAction(CCAction *pAction)
     HASH_FIND_INT(m_pTargets, &pTarget, pElement);
     if (pElement)
     {
+        pAction->stop();
         unsigned int i = ccArrayGetIndexOfObject(pElement->actions, pAction);
         if (UINT_MAX != i)
         {

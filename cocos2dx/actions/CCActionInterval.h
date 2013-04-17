@@ -186,6 +186,7 @@ public:
     bool initWithAction(CCActionInterval *pAction);
     virtual CCObject* copyWithZone(CCZone *pZone);
     virtual void startWithTarget(CCNode* pTarget);
+    virtual void stop();
     virtual void step(float dt);
     virtual bool isDone(void);
     virtual CCActionInterval* reverse(void);

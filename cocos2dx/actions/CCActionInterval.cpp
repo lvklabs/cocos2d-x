@@ -585,6 +585,12 @@ void CCRepeatForever::startWithTarget(CCNode* pTarget)
     m_pInnerAction->startWithTarget(pTarget);
 }
 
+void CCRepeatForever::stop()
+{
+    m_pInnerAction->stop();
+    CCActionInterval::stop();
+}
+
 void CCRepeatForever::step(float dt)
 {
     m_pInnerAction->step(dt);
