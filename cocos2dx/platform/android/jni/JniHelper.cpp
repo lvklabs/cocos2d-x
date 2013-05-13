@@ -168,7 +168,7 @@ extern "C"
 
         if (! getEnv(&env))
         {
-            return 0;
+            return "";
         }
 
         const char* chars = env->GetStringUTFChars(jstr, NULL);
