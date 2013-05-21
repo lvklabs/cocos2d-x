@@ -88,6 +88,7 @@ typedef void (CCObject::*SEL_CallFuncND)(CCNode*, void*);
 typedef void (CCObject::*SEL_CallFuncO)(CCObject*);
 typedef void (CCObject::*SEL_MenuHandler)(CCObject*);
 typedef void (CCObject::*SEL_EventHandler)(CCEvent*);
+typedef void (CCObject::*SEL_GestureHandler)(CCObject*);
 typedef int (CCObject::*SEL_Compare)(CCObject*);
 
 #define schedule_selector(_SELECTOR) (SEL_SCHEDULE)(&_SELECTOR)
@@ -97,6 +98,7 @@ typedef int (CCObject::*SEL_Compare)(CCObject*);
 #define callfuncO_selector(_SELECTOR) (SEL_CallFuncO)(&_SELECTOR)
 #define menu_selector(_SELECTOR) (SEL_MenuHandler)(&_SELECTOR)
 #define event_selector(_SELECTOR) (SEL_EventHandler)(&_SELECTOR)
+#define gesture_selector(_SELECTOR) (SEL_GestureHandler)(&_SELECTOR)
 #define compare_selector(_SELECTOR) (SEL_Compare)(&_SELECTOR)
 
 // end of base_nodes group
