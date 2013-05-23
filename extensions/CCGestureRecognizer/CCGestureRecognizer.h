@@ -92,6 +92,8 @@ protected:
     CCObject *_target;
     SEL_GestureHandler _selector;
     CCGestureRecognizerState _state;
+
+    void notifyTarget();
 };
 
 
@@ -109,8 +111,11 @@ public:
 private:
     CCPoint _p1Start;
     CCPoint _p2Start;
-    CCPoint _p1End;
-    CCPoint _p2End;
+    CCPoint _p1;
+    CCPoint _p2;
+
+    void set(CCSet *pTouches, CCPoint &p1, CCPoint &p2);
+    void reset();
 };
 
 class CCTapGestureRecognizer : public CCGestureRecognizer
