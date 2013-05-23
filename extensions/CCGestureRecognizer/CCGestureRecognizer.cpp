@@ -1,9 +1,27 @@
-//
-//  CCGestureRecognizer.cpp
-//
-//  Created by Andres Pagliano
-//  Copyright 2013 LavandaInk. All rights reserved.
-//
+/****************************************************************************
+Copyright (c) 2010 cocos2d-x.org
+Copyright (c) 2013 Andres Pagliano
+
+http://www.cocos2d-x.org
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+****************************************************************************/
 
 #include "CCGestureRecognizer.h"
 
@@ -33,9 +51,9 @@ bool CCGestureRecognizer::init(cocos2d::CCObject *target, cocos2d::SEL_GestureHa
 {
     _target = target;
     _selector = sel;
-    _state = CCGestureRecognizerStatePossible;
     _delegate = 0;
     _enabled = true;
+    reset();
 
     return true;
 }
@@ -56,17 +74,13 @@ CCGestureRecognizerState CCGestureRecognizer::getState()
 
 CCPoint CCGestureRecognizer::locationInView()
 {
-    // TODO
-
     return CCPoint(0, 0);
 }
 
-//int CCGestureRecognizer::getNumberOfTouches()
-//{
-//    // TODO
-//
-//     return 0;
-//}
+int CCGestureRecognizer::getNumberOfTouches()
+{
+     return 0;
+}
 
 void CCGestureRecognizer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
 {
@@ -119,8 +133,8 @@ void CCGestureRecognizer::setPoint(CCSet *pTouches, CCPoint &p1, CCPoint &p2)
 void CCGestureRecognizer::reset()
 {
     _state = CCGestureRecognizerStatePossible;
-    _p1Start = CCPoint(0, 0);
-    _p2Start = CCPoint(0, 0);
+    _p1Begin = CCPoint(0, 0);
+    _p2Begin = CCPoint(0, 0);
     _p1 = CCPoint(0, 0);
     _p2 = CCPoint(0, 0);
 }
@@ -131,15 +145,15 @@ void CCGestureRecognizer::reset()
 
 float CCPinchGestureRecognizer::getScale()
 {
-    float dStart = distance(_p1Start, _p2Start);
+    float dBegin = distance(_p1Begin, _p2Begin);
     float d = distance(_p1, _p2);
 
-    //CCLOG("SCALE FACTOR 1x1 %f 1x2 %f", _p1Start.x, _p1.x);
-    //CCLOG("SCALE FACTOR 1y1 %f 1y2 %f", _p1Start.y, _p1.y);
-    //CCLOG("SCALE FACTOR 2x1 %f 2x2 %f", _p2Start.x, _p2.x);
-    //CCLOG("SCALE FACTOR 2y1 %f 2y2 %f", _p2Start.y, _p2.y);
+    //CCLOG("SCALE FACTOR 1x1 %f 1x2 %f", _p1Begin.x, _p1.x);
+    //CCLOG("SCALE FACTOR 1y1 %f 1y2 %f", _p1Begin.y, _p1.y);
+    //CCLOG("SCALE FACTOR 2x1 %f 2x2 %f", _p2Begin.x, _p2.x);
+    //CCLOG("SCALE FACTOR 2y1 %f 2y2 %f", _p2Begin.y, _p2.y);
 
-    return std::pow(2, (d - dStart)/100);
+    return std::pow(2, (d - dBegin)/100);
 }
 
 void CCPinchGestureRecognizer::ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent)
@@ -165,7 +179,7 @@ void CCPinchGestureRecognizer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
             }
 
             _state = CCGestureRecognizerStateBegan;
-            setPoint(pTouches, _p1Start, _p2Start);
+            setPoint(pTouches, _p1Begin, _p2Begin);
             setPoint(pTouches, _p1, _p2);
             notifyTarget();
         } else if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
@@ -184,15 +198,13 @@ void CCPinchGestureRecognizer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         return;
     }
 
-    if (_state != CCGestureRecognizerStateBegan || _state != CCGestureRecognizerStateChanged) {
-        return;
-    }
-
     if (pTouches->count() == 2) {
-        _state = CCGestureRecognizerStateEnded;
-        setPoint(pTouches, _p1, _p2);
-        notifyTarget();
-        reset();
+        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+            _state = CCGestureRecognizerStateEnded;
+            setPoint(pTouches, _p1, _p2);
+            notifyTarget();
+            reset();
+        }
     }
 }
 
@@ -204,15 +216,13 @@ void CCPinchGestureRecognizer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEve
         return;
     }
 
-    if (_state != CCGestureRecognizerStateBegan || _state != CCGestureRecognizerStateChanged) {
-        return;
-    }
-
     if (pTouches->count() == 2) {
-        _state = CCGestureRecognizerStateCancelled;
-        setPoint(pTouches, _p1, _p2);
-        notifyTarget();
-        reset();
+        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+            _state = CCGestureRecognizerStateCancelled;
+            setPoint(pTouches, _p1, _p2);
+            notifyTarget();
+            reset();
+        }
     }
 }
 
@@ -263,22 +273,8 @@ void CCTapGestureRecognizer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
 
 void CCTapGestureRecognizer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent)
 {
+    CC_UNUSED_PARAM(pTouches);
     CC_UNUSED_PARAM(pEvent);
-
-    if (!_enabled) {
-        return;
-    }
-
-    if (_state != CCGestureRecognizerStateBegan || _state != CCGestureRecognizerStateChanged) {
-        return;
-    }
-
-    if (pTouches->count() == 1) {
-        _state = CCGestureRecognizerStateCancelled;
-        setPoint(pTouches, _p1);
-        notifyTarget();
-        reset();
-    }
 }
 
 
@@ -315,7 +311,7 @@ void CCPanGestureRecognizer::ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent)
             }
 
             _state = CCGestureRecognizerStateBegan;
-            setPoint(pTouches, _p1Start);
+            setPoint(pTouches, _p1Begin);
             setPoint(pTouches, _p1);
             notifyTarget();
         } else if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
@@ -334,15 +330,13 @@ void CCPanGestureRecognizer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         return;
     }
 
-    if (_state != CCGestureRecognizerStateBegan || _state != CCGestureRecognizerStateChanged) {
-        return;
-    }
-
     if (pTouches->count() >= 1) {
-        _state = CCGestureRecognizerStateEnded;
-        setPoint(pTouches, _p1);
-        notifyTarget();
-        reset();
+        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+            _state = CCGestureRecognizerStateEnded;
+            setPoint(pTouches, _p1);
+            notifyTarget();
+            reset();
+        }
     }
 }
 
@@ -354,15 +348,13 @@ void CCPanGestureRecognizer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent
         return;
     }
 
-    if (_state != CCGestureRecognizerStateBegan || _state != CCGestureRecognizerStateChanged) {
-        return;
-    }
-
     if (pTouches->count() >= 1) {
-        _state = CCGestureRecognizerStateCancelled;
-        setPoint(pTouches, _p1);
-        notifyTarget();
-        reset();
+        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+            _state = CCGestureRecognizerStateCancelled;
+            setPoint(pTouches, _p1);
+            notifyTarget();
+            reset();
+        }
     }
 }
 
