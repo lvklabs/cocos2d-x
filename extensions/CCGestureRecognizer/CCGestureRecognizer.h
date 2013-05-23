@@ -77,7 +77,7 @@ public:
 
     virtual CCPoint locationInView();
 
-    virtual int getNumberOfTouches();
+    //virtual int getNumberOfTouches();
 
     CC_SYNTHESIZE(bool, _enabled, Enabled)
     CC_SYNTHESIZE(CCGestureRecognizerDelegate *, _delegate, Delegate)
@@ -93,7 +93,15 @@ protected:
     SEL_GestureHandler _selector;
     CCGestureRecognizerState _state;
 
+    CCPoint _p1Start;
+    CCPoint _p2Start;
+    CCPoint _p1;
+    CCPoint _p2;
+
     void notifyTarget();
+    void setPoint(CCSet *pTouches, CCPoint &p1);
+    void setPoint(CCSet *pTouches, CCPoint &p1, CCPoint &p2);
+    void reset();
 };
 
 
@@ -107,23 +115,28 @@ public:
     virtual void ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent);
     virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
     virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
-
-private:
-    CCPoint _p1Start;
-    CCPoint _p2Start;
-    CCPoint _p1;
-    CCPoint _p2;
-
-    void set(CCSet *pTouches, CCPoint &p1, CCPoint &p2);
-    void reset();
 };
 
 class CCTapGestureRecognizer : public CCGestureRecognizer
 {
+public:
+    virtual CCPoint locationInView();
+
+    virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
 };
 
 class CCPanGestureRecognizer : public CCGestureRecognizer
 {
+public:
+    virtual CCPoint locationInView();
+
+    virtual void ccTouchesBegan(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesMoved(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent);
+    virtual void ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent);
 };
 
 class CCRotationGestureRecognizer : public CCGestureRecognizer
