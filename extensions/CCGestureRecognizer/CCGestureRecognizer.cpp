@@ -198,13 +198,11 @@ void CCPinchGestureRecognizer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         return;
     }
 
-    if (pTouches->count() == 2) {
-        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
-            _state = CCGestureRecognizerStateEnded;
-            setPoint(pTouches, _p1, _p2);
-            notifyTarget();
-            reset();
-        }
+    if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+        _state = CCGestureRecognizerStateEnded;
+        setPoint(pTouches, _p1, _p2);
+        notifyTarget();
+        reset();
     }
 }
 
@@ -216,13 +214,11 @@ void CCPinchGestureRecognizer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEve
         return;
     }
 
-    if (pTouches->count() == 2) {
-        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
-            _state = CCGestureRecognizerStateCancelled;
-            setPoint(pTouches, _p1, _p2);
-            notifyTarget();
-            reset();
-        }
+    if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+        _state = CCGestureRecognizerStateCancelled;
+        setPoint(pTouches, _p1, _p2);
+        notifyTarget();
+        reset();
     }
 }
 
@@ -330,13 +326,11 @@ void CCPanGestureRecognizer::ccTouchesEnded(CCSet *pTouches, CCEvent *pEvent)
         return;
     }
 
-    if (pTouches->count() >= 1) {
-        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
-            _state = CCGestureRecognizerStateEnded;
-            setPoint(pTouches, _p1);
-            notifyTarget();
-            reset();
-        }
+    if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+        _state = CCGestureRecognizerStateEnded;
+        setPoint(pTouches, _p1);
+        notifyTarget();
+        reset();
     }
 }
 
@@ -348,13 +342,11 @@ void CCPanGestureRecognizer::ccTouchesCancelled(CCSet *pTouches, CCEvent *pEvent
         return;
     }
 
-    if (pTouches->count() >= 1) {
-        if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
-            _state = CCGestureRecognizerStateCancelled;
-            setPoint(pTouches, _p1);
-            notifyTarget();
-            reset();
-        }
+    if (_state == CCGestureRecognizerStateBegan || _state == CCGestureRecognizerStateChanged) {
+        _state = CCGestureRecognizerStateCancelled;
+        setPoint(pTouches, _p1);
+        notifyTarget();
+        reset();
     }
 }
 
