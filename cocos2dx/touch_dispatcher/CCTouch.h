@@ -86,6 +86,15 @@ private:
 
 class CC_DLL CCEvent : public CCObject
 {
+public:
+    CCEvent(float timestamp = 0)
+        : m_timestamp(timestamp)
+    { }
+
+    float getTimestamp() { return m_timestamp; }
+
+private:
+    float m_timestamp;
 };
 
 // end of input group

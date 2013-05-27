@@ -5,6 +5,7 @@
 #include "cocoa/CCSet.h"
 #include "cocoa/CCDictionary.h"
 #include "cocoa/CCInteger.h"
+#include "platform/platform.h"
 
 NS_CC_BEGIN
 
@@ -40,6 +41,16 @@ static void removeUsedIndexBit(int index)
     unsigned int temp = 1 << index;
     temp = ~temp;
     s_indexBitsUsed &= temp;
+}
+
+static float timestamp()
+{
+    struct cc_timeval tv;
+
+    if (CCTime::gettimeofdayCocos2d(&tv, NULL) == 0) {
+        return tv.tv_usec/1000000.0f;
+    }
+    return 0;
 }
 
 CCEGLViewProtocol::CCEGLViewProtocol()
@@ -235,7 +246,8 @@ void CCEGLViewProtocol::handleTouchesBegin(int num, int ids[], float xs[], float
         return;
     }
 
-    m_pDelegate->touchesBegan(&set, NULL);
+    CCEvent event(timestamp());
+    m_pDelegate->touchesBegan(&set, &event);
 }
 
 void CCEGLViewProtocol::handleTouchesMove(int num, int ids[], float xs[], float ys[])
@@ -276,7 +288,8 @@ void CCEGLViewProtocol::handleTouchesMove(int num, int ids[], float xs[], float 
         return;
     }
 
-    m_pDelegate->touchesMoved(&set, NULL);
+    CCEvent event(timestamp());
+    m_pDelegate->touchesMoved(&set, &event);
 }
 
 void CCEGLViewProtocol::getSetOfTouchesEndOrCancel(CCSet& set, int num, int ids[], float xs[], float ys[])
@@ -330,14 +343,18 @@ void CCEGLViewProtocol::handleTouchesEnd(int num, int ids[], float xs[], float y
 {
     CCSet set;
     getSetOfTouchesEndOrCancel(set, num, ids, xs, ys);
-    m_pDelegate->touchesEnded(&set, NULL);
+
+    CCEvent event(timestamp());
+    m_pDelegate->touchesEnded(&set, &event);
 }
 
 void CCEGLViewProtocol::handleTouchesCancel(int num, int ids[], float xs[], float ys[])
 {
     CCSet set;
     getSetOfTouchesEndOrCancel(set, num, ids, xs, ys);
-    m_pDelegate->touchesCancelled(&set, NULL);
+
+    CCEvent event(timestamp());
+    m_pDelegate->touchesCancelled(&set, &event);
 }
 
 const CCRect& CCEGLViewProtocol::getViewPortRect() const
